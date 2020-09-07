@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from './IProduct';
 import { ActivatedRoute, Router } from '@angular/router'
+import { ProductService } from './product.service';
 
 @Component({
   templateUrl: './product-detail.component.html',
@@ -9,22 +10,35 @@ import { ActivatedRoute, Router } from '@angular/router'
 export class ProductDetailComponent implements OnInit {
   pageTitle: string = 'Product Detail';
   product: IProduct;
+  errorMessage: string;
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router, private productService: ProductService) { }
 
   ngOnInit(): void {
     let id = +this.route.snapshot.paramMap.get('id');
     this.pageTitle += ` - ${id}`;
-    this.product = {
-      'productId' : id,
-      'productName' : 'Something',
-      'productCode' : 'GUID123213',
-      'releaseDate' : 'September 2, 2020',
-      'description' : 'Something beautiful',
-      'price' : 15.00,
-      'starRating' : 2.6,
-      'imageUrl' : 'assets/images/leaf_rake.png'
-    }
+    this.productService.getProductById(id).subscribe({
+      next: product => 
+      {
+        if (product !== null && product !== undefined)
+        {
+          this.product = {
+            'productId' : id,
+            'productName' : product.productName,
+            'productCode' : product.productCode,
+            'releaseDate' : product.releaseDate,
+            'description' : product.description,
+            'price' : product.price,
+            'starRating' : product.starRating,
+            'imageUrl' : product.imageUrl}
+        }
+        else
+        {
+          this.errorMessage = `Product not found`;
+        }
+      },
+      error: err => this.errorMessage = err
+    });
   }
 
   onBack() : void {

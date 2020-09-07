@@ -1,6 +1,17 @@
 <div class='card' *ngIf='product'>
     <div class='card-header'>
-        {{pageTitle + ': ' + product.productName}}
+        {{pageTitle + ': ' + product.productName}}<br>
+        <label *ngIf errorMessage != "">Error: {{errorMessage}}</label>
+    </div>
+
+    <div class='card-body'>
+        <label>Id: {{product.productId}}</label><br>
+        <label>Name: {{product.productName}}</label><br>
+        <label>Code: {{product.productCode}}</label><br>
+        <label>Release Date: {{product.releaseDate}}</label><br>
+        <label>Description: {{product.description}}</label><br>
+        <label>Price: {{product.price}}</label><br>
+        <label>Star Rating: {{product.starRating}}</label>
     </div>
 
     <div class='card-footer'>
